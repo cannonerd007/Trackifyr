@@ -1,11 +1,238 @@
 <!DOCTYPE html>
-<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Trackifyr: Project Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
+
+<body class="theme-light">
+    <div class="app-container">
+
+        <header class="app-header">
+           <div class="logo-container">
+            <img src="assets/logo.png" alt="Trackifyr Logo" class="app-logo">
+            <h1>Trackifyr</h1>
+        </div>
+
+            <div class="project-progress-bar">
+                <span class="label">Project Progress:</span>
+                <div class="progress-track">
+                    <div class="progress-fill" style="width: 0%;"></div>
+                </div>
+                <span class="progress-value">0%</span>
+            </div>
+
+            <button id="theme-toggle" class="theme-toggle-btn" title="Toggle Dark/Light Mode">
+                <span class="icon">🌙</span>
+            </button>
+        </header>
+
+        <main class="workspace-split">
+            <div class="panel panel-left">
+                
+                <div class="panel-section">
+                    <h2>Projects</h2>
+                    <div id="projects-list">
+                        <p class="empty-state">Loading projects...</p>
+                    </div>
+                    <button id="add-project-btn" class="add-btn primary-btn">+ Add New Project</button>
+                </div>
+
+                <hr class="panel-separator">
+
+                <div class="panel-section">
+                    <h2>Milestones</h2>
+                    <div id="milestones-list">
+                        <p class="empty-state">Select a project to see milestones.</p>
+                    </div>
+                    <button id="add-milestone-btn" class="add-btn primary-btn">+ Add New Milestone</button>
+                </div>
+            </div>
+
+            <div class="panel panel-middle">
+                <div class="panel-section">
+                    <h2 id="tasks-panel-title">Tasks</h2>
+                    <div id="tasks-list">
+                        <p class="empty-state">Select a milestone to view tasks.</p>
+                    </div>
+                    <button id="add-task-btn" class="add-btn primary-btn">+ Add New Task</button>
+                </div>
+            </div>
+
+            <div class="panel panel-right">
+                <h2 id="task-detail-title">Task Details</h2>
+                <div id="task-details-view">
+                    <p class="empty-state">Select a task on the left to view details.</p>
+                </div>
+            </div>
+        </main>
+    </div> 
     
+    <div id="add-project-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <header class="modal-header">
+                <h3>Add New Project</h3>
+                <button type="button" class="close-modal-btn">✖</button>
+            </header>
+            <form id="add-project-form">
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="project-name">Project Name</label>
+                        <input type="text" id="project-name" required="">
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="project-description">Description</label>
+                        <textarea id="project-description"></textarea>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="add-btn primary-btn">Create Project</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="edit-project-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <header class="modal-header">
+                <h3>Edit Project</h3>
+                <button type="button" class="close-modal-btn">✖</button>
+            </header>
+            <form id="edit-project-form" data-project-id="">
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="edit-project-name">Project Name</label>
+                        <input type="text" id="edit-project-name" required="">
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="edit-project-description">Description</label>
+                        <textarea id="edit-project-description"></textarea>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="delete-project-btn" class="add-btn danger-btn">Delete Project</button>
+                    <button type="submit" class="add-btn primary-btn">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div id="add-milestone-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <header class="modal-header">
+                <h3>Add New Milestone</h3>
+                <button type="button" class="close-modal-btn">✖</button>
+            </header>
+            <form id="add-milestone-form">
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="milestone-name">Milestone Name</label>
+                        <input type="text" id="milestone-name" required="">
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="milestone-description">Description</label>
+                        <textarea id="milestone-description"></textarea>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="add-btn primary-btn">Create Milestone</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="edit-milestone-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <header class="modal-header">
+                <h3>Edit Milestone</h3>
+                <button type="button" class="close-modal-btn">✖</button>
+            </header>
+            <form id="edit-milestone-form" data-milestone-id="">
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="edit-milestone-name">Milestone Name</label>
+                        <input type="text" id="edit-milestone-name" required="">
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="edit-milestone-description">Description</label>
+                        <textarea id="edit-milestone-description"></textarea>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="delete-milestone-btn" class="add-btn danger-btn">Delete Milestone</button>
+                    <button type="submit" class="add-btn primary-btn">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="add-task-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <header class="modal-header">
+                <h3 id="task-modal-title">Add New Task</h3>
+                <button type="button" class="close-modal-btn">✖</button>
+            </header>
+            <form id="add-task-form">
+                <div class="form-grid">
+                    <div class="form-group full-width"> 
+                        <label for="task-name">Task Name</label>
+                        <input type="text" id="task-name" name="task-name" required="">
+                    </div>
+                    <div class="form-group">
+                      <label for="task-milestone-id_display">Milestone</label>
+                    <div id="task-milestone-container">
+                         </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-status">Status</label>
+                        <select id="task-status" name="task-status">
+                            <option value="pending">Pending</option>
+                            <option value="complete">Complete</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="task-dependency-id">Depends On (Task)</label>
+                        <select id="task-dependency-id" name="task-dependency-id">
+                            <option value="">None (No Dependency)</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="task-description">Description</label>
+                        <textarea id="task-description" name="task-description"></textarea>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="delete-task-btn" class="add-btn danger-btn hidden">Delete Task</button>
+                    <button type="submit" class="add-btn primary-btn">Save Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="project-complete-modal" class="modal-overlay hidden">
+        <div class="modal-content" style="max-width: 400px; text-align: center;">
+            <header class="modal-header" style="justify-content: center; border-bottom: none;">
+                <h3 style="font-size: 2rem; color: var(--clr-unlocked);">🎉 Congratulations! 🎉</h3>
+            </header>
+            <div class="modal-body">
+                <p style="font-size: 1.2rem; margin-bottom: 1.5rem;">
+                    You have successfully completed the project: <br>
+                    <strong id="completed-project-name">Project Name Placeholder</strong>
+                </p>
+                <p style="color: var(--clr-text-muted);">Time to celebrate your hard work!</p>
+            </div>
+            <div class="form-actions" style="justify-content: center;">
+                <button type="button" class="add-btn primary-btn close-modal-btn">Awesome!</button>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module" src="storage.js"></script>
+    <script type="module" src="data.js"></script>
+    <script type="module" src="renderer.js"></script>
+    <script type="module" src="app.js"></script>
+
 </body>
 </html>
