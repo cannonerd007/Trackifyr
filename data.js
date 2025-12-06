@@ -45,3 +45,9 @@ let activeMilestoneId = null;
 const generateId = (prefix) => {
     return `${prefix}-${Date.now()}`;
 };
+
+
+const saveProjectsAndActiveIds = async () => {
+    await saveData(STORAGE_KEYS.PROJECTS, projects);
+    await saveData(STORAGE_KEYS.ACTIVE_PROJECT_ID, activeProjectId); 
+};
