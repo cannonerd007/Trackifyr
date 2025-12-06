@@ -226,3 +226,8 @@ export const renderTasksList = (milestoneId) => {
         tasksListEl.innerHTML = '<p class="empty-state">Select a milestone to view tasks.</p>';
         return;
     }
+
+    if (tasks.length === 0) {
+        tasksListEl.innerHTML = '<p class="empty-state">No tasks in this milestone. Use the "Add Task" button below.</p>';
+        return;
+    }
