@@ -37,3 +37,11 @@ const DEFAULT_PROJECTS = [{
         }]
     }]
 }];
+
+let projects = []; 
+let activeProjectId = null;
+let activeMilestoneId = null;
+
+const generateId = (prefix) => {
+    return `${prefix}-${Date.now()}`;
+};
