@@ -24,6 +24,19 @@ const progressFillEl = document.querySelector('.progress-fill');
 const progressValueEl = document.querySelector('.progress-value');
 const taskDetailTitleEl = document.getElementById('task-detail-title');
 
+export const renderProjectProgress = () => {
+    const activeProject = getActiveProject();
+    if (!activeProject) {
+        progressFillEl.style.width = `0%`;
+        progressValueEl.textContent = `0%`;
+        return;
+    }
+
+    const { progressPercentage } = calculateProjectProgress(activeProject);
+
+    progressFillEl.style.width = `${progressPercentage}%`;
+    progressValueEl.textContent = `${progressPercentage}%`;
+};
 
 const createDependencyNodeHtml = (task, isFirst, isLast) => {
     const statusClass = task.status === 'complete' ? 'unlocked' : 'locked';
