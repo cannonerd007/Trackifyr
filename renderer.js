@@ -201,7 +201,18 @@ export const renderMilestonesList = () => {
          milestonesListEl.appendChild(milestoneCard);
 
         milestoneCard.querySelector('.edit-card-btn').addEventListener('click', (e) => {
-           
+           e.stopPropagation();
+            const milestoneId = e.target.closest('button').dataset.milestoneId;
+            const milestoneDetails = getMilestoneDetails(milestoneId);
+
+            const editMilestoneModal = document.getElementById('edit-milestone-modal');
+            const editMilestoneForm = document.getElementById('edit-milestone-form');
+
+            document.getElementById('edit-milestone-name').value = milestoneDetails.name;
+            document.getElementById('edit-milestone-description').value = milestoneDetails.description || '';
+            editMilestoneForm.dataset.milestoneId = milestoneId;
+            
+            editMilestoneModal.classList.remove('hidden');
         });
     });
 };
