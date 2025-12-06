@@ -25,16 +25,84 @@ const progressValueEl = document.querySelector('.progress-value');
 const taskDetailTitleEl = document.getElementById('task-detail-title');
 
 
-export const renderProjectProgress = () => {
-    const activeProject = getActiveProject();
-    if (!activeProject) {
-        progressFillEl.style.width = `0%`;
-        progressValueEl.textContent = `0%`;
-        return;
+const createDependencyNodeHtml = (task, isFirst, isLast) => {
+    const statusClass = task.status === 'complete' ? 'unlocked' : 'locked';
+    const isCurrent = task.isCurrent;
+    
+    const lineStyle = isLast ? 'height: 12px; top: 0;' : 
+                      isFirst ? 'height: 100%; top: 18px;' : 
+                      'height: 100%; top: 0;';
+
+    const nodeHtml = `
+        <div class="dependency-node ${isCurrent ? 'current' : ''}" style="height: ${isLast ? '25px' : '40px'};">
+            ${!isFirst ? `<div class="dependency-node-line" style="${lineStyle}"></div>` : ''}
+            <div class="dependency-node-dot"></div>
+            <div class="dependency-node-text" style="margin-left: 20px; margin-top: 5px;">
+                <span class="dependency-badge ${statusClass}">${task.status === 'complete' ? 'Done' : 'Pending'}</span>
+                <span>${task.name}</span>
+            </div>
+        </div>
+    `;
+    return nodeHtml;
+};
+
+export const renderTaskDetails = (taskId) => {
+    const task = getTaskDetails(taskId);
+    if (!task) return;
+
+    const dependencyChain = getTaskDependencyChain(taskId);
+    const locked = isTaskLocked(taskId);
+    const isComplete = task.status === 'complete';
+    
+    const statusClass = isComplete ? 'status-complete' : locked ? 'status-pending' : 'status-in-progress';
+    const statusText = isComplete ? 'Complete' : locked ? 'Blocked' : 'In Progress';
+
+    let dependencyHtml = '<p>No dependencies.</p>';
+    if (dependencyChain.length > 1) {
+        dependencyHtml = '<div class="dependency-tree">';
+        dependencyChain.forEach((depTask, index) => {
+            dependencyHtml += createDependencyNodeHtml(
+                depTask, 
+                index === 0, 
+                index === dependencyChain.length - 1
+            );
+        });
+        dependencyHtml += '</div>';
     }
 
-    const { progressPercentage } = calculateProjectProgress(activeProject);
 
-    progressFillEl.style.width = `${progressPercentage}%`;
-    progressValueEl.textContent = `${progressPercentage}%`;
+    taskDetailsViewEl.innerHTML = `
+        <div class="detail-section">
+            <h4>Description</h4>
+            <p>${task.description || 'No description provided.'}</p>
+        </div>
+        <div class="detail-section">
+            <h4>Status</h4>
+            <span class="status-tag ${statusClass}">${statusText}</span>
+        </div>
+        <div class="detail-section">
+            <h4>Dependency Chain</h4>
+            ${dependencyHtml}
+        </div>
+        <div class="detail-section">
+            <h4>Actions</h4>
+            <button 
+                type="button" 
+                class="add-btn primary-btn" 
+                id="edit-task-details-btn" 
+                data-task-id="${task.id}"
+                ${isComplete ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''} 
+                title="${isComplete ? 'Cannot edit completed tasks.' : 'Edit Task Details'}"
+            >
+                Edit Task
+            </button>
+        </div>
+    `;
+
+    if (!isComplete) {
+        document.getElementById('edit-task-details-btn').addEventListener('click', (e) => {
+            const taskId = e.target.dataset.taskId;
+            document.getElementById('tasks-list').querySelector(`[data-task-id="${taskId}"] .edit-card-btn`).click();
+        });
+    }
 };
