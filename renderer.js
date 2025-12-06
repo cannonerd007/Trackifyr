@@ -167,3 +167,12 @@ export const renderProjectsList = () => {
     });
 };
 
+export const renderMilestonesList = () => {
+    const milestones = getMilestones();
+    const activeMilestone = getActiveMilestone();
+    milestonesListEl.innerHTML = '';
+
+    if (milestones.length === 0) {
+        milestonesListEl.innerHTML = '<p class="empty-state">No milestones found. Add one!</p>';
+        return;
+    }
