@@ -283,3 +283,26 @@ export const renderTasksList = (milestoneId) => {
         tasksListEl.appendChild(taskRow);
     });
 };
+
+
+
+
+
+
+export const populateMilestoneDropdown = (selectElementId, currentTaskId = null) => {
+    const projects = getProjects();
+    const activeMilestone = getActiveMilestone();
+
+   
+    let milestoneToDisplay;
+    if (currentTaskId) {
+        milestoneToDisplay = projects.flatMap(p => p.milestones).find(m => m.tasks.some(t => t.id === currentTaskId));
+    } else {
+        milestoneToDisplay = activeMilestone;
+    }
+
+    if (!milestoneToDisplay) {
+        return `<select id="${selectElementId}" name="task-milestone-id" disabled>
+                    <option value="">No Milestone Available</option>
+                </select>`;
+    }
