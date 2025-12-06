@@ -119,3 +119,51 @@ export const renderTaskDetails = (taskId) => {
         });
     }
 };
+
+export const renderProjectsList = () => {
+    const projects = getProjects();
+    const activeProject = getActiveProject();
+    projectsListEl.innerHTML = ''; 
+
+    if (projects.length === 0) {
+        projectsListEl.innerHTML = '<p class="empty-state">No projects found. Add one!</p>';
+        return;
+    }
+
+    projects.forEach(project => {
+        const projectCard = document.createElement('div');
+        projectCard.className = `milestone-card project-card ${project.id === activeProject?.id ? 'active' : ''}`;
+        projectCard.dataset.projectId = project.id;
+
+        const { progressPercentage } = calculateProjectProgress(project);
+        
+        projectCard.innerHTML = `
+            <div class="milestone-info">
+                <h3>${project.name}</h3>
+                <p>${project.description || 'No description'}</p>
+            </div>
+            <div class="progress-ring-text">${progressPercentage}%</div>
+            <button class="edit-card-btn" data-modal-target="edit-project-modal" data-project-id="${project.id}">
+                <span class="icon">⚙️</span>
+            </button>
+        `;
+
+        projectsListEl.appendChild(projectCard);
+
+        projectCard.querySelector('.edit-card-btn').addEventListener('click', (e) => {
+            e.stopPropagation(); 
+            const projectId = e.target.closest('button').dataset.projectId;
+            const projectDetails = getProjectDetails(projectId);
+            
+            const editProjectModal = document.getElementById('edit-project-modal');
+            const editProjectForm = document.getElementById('edit-project-form');
+            
+            document.getElementById('edit-project-name').value = projectDetails.name;
+            document.getElementById('edit-project-description').value = projectDetails.description || '';
+            editProjectForm.dataset.projectId = projectId;
+            
+            editProjectModal.classList.remove('hidden');
+        });
+    });
+};
+
