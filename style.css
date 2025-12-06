@@ -126,3 +126,19 @@ padding:20px;
     overflow: hidden;
     width: auto; 
 }
+
+.progress-fill {
+    height: 100%;
+    background-color: var(--clr-primary);
+    transition: width 0.4s ease-out; 
+    border-radius: 4px;
+}
+
+.progress-value {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-left: 0.75rem;
+    color: var(--clr-primary);
+    min-width: 30px; 
+    text-align: right;
+}
