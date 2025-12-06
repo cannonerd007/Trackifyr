@@ -306,3 +306,76 @@ export const populateMilestoneDropdown = (selectElementId, currentTaskId = null)
                     <option value="">No Milestone Available</option>
                 </select>`;
     }
+
+
+     const project = projects.find(p => p.milestones.some(m => m.id === milestoneToDisplay.id));
+    
+    if (currentTaskId) {
+        return `
+            <input 
+                type="text" 
+                id="${selectElementId}_display" 
+                value="${project.name}: ${milestoneToDisplay.name}" 
+                disabled 
+                class="disabled-input"
+                title="Task is assigned to this milestone and cannot be moved."
+            />
+            <input 
+                type="hidden" 
+                id="${selectElementId}" 
+                name="task-milestone-id" 
+                value="${milestoneToDisplay.id}"
+            />
+        `;
+    }
+    
+    let dropdownHtml = `<select id="${selectElementId}" name="task-milestone-id" required>`;
+    
+    dropdownHtml += '<option value="">-- Select Milestone --</option>';
+
+    projects.forEach(p => {
+        dropdownHtml += `<optgroup label="${p.name}">`;
+        p.milestones.forEach(m => {
+            const isSelected = m.id === milestoneToDisplay.id;
+            dropdownHtml += `<option value="${m.id}" ${isSelected ? 'selected' : ''}>${m.name}</option>`;
+        });
+        dropdownHtml += `</optgroup>`;
+    });
+
+    dropdownHtml += `</select>`;
+    return dropdownHtml;
+};
+
+export const populateDependencyDropdown = (selectElementId, currentTaskId = null) => {
+    const selectEl = document.getElementById(selectElementId);
+    if (!selectEl) return;
+
+    
+    const allProjects = getProjects();
+
+    selectEl.innerHTML = '<option value="">None (No Dependency)</option>';
+
+    
+    allProjects.forEach(project => {
+        project.milestones.forEach(milestone => {
+            milestone.tasks.forEach(task => {
+                
+                if (task.id === currentTaskId) return;
+
+                const option = document.createElement('option');
+                option.value = task.id;
+                
+   
+                const labelStatus = task.status === 'complete' ? 'Done' : task.status === 'pending' ? 'Pending' : 'In Progress';
+                option.textContent = `[${milestone.name}] ${task.name} (${labelStatus})`;
+
+            
+                if (task.id === getTaskDetails(currentTaskId)?.dependencyId) {
+                    option.selected = true;
+                }
+                
+                selectEl.appendChild(option);
+            });
+        });
+    });
+};
