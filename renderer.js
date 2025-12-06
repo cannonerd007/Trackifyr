@@ -231,3 +231,55 @@ export const renderTasksList = (milestoneId) => {
         tasksListEl.innerHTML = '<p class="empty-state">No tasks in this milestone. Use the "Add Task" button below.</p>';
         return;
     }
+     tasks.forEach(task => {
+        const isCompleted = task.status === 'complete';
+        const isLocked = isTaskLocked(task.id);
+
+        const taskRow = document.createElement('div');
+        taskRow.className = `task-row`;
+        taskRow.dataset.taskId = task.id;
+        
+        let badgeHtml = "";
+
+        if (task.status === "complete") {
+        badgeHtml = `<span class="task-side-badge completed">Completed</span>`;
+        } 
+        else if (task.dependencyId) {
+        const badgeClass = isLocked ? "blocked" : "ready";
+        const badgeText = isLocked ? "Blocked" : "Ready";
+        badgeHtml = `<span class="task-side-badge ${badgeClass}">${badgeText}</span>`;
+        }
+
+        const checkboxChecked = isCompleted ? 'checked' : '';
+        const checkboxDisabled = (isLocked || isCompleted) ? 'disabled' : '';
+
+   
+        const actionButtonHtml = isCompleted
+            ? `
+                <button class="delete-task-row-btn danger-btn" title="Delete task permanently">
+                    <span class="icon">🗑️</span>
+                </button>
+              `
+            : `
+                <button class="edit-card-btn" title="Edit task">
+                    <span class="icon">✎</span>
+                </button>
+              `;
+       
+
+        taskRow.innerHTML = `
+            <div class="task-row-left">
+                <label class="task-checkbox-label">
+                    <input type="checkbox" class="task-checkbox-input" data-task-id="${task.id}" ${checkboxChecked} ${checkboxDisabled} />
+                    <span class="custom-tick"></span>
+                </label>
+                <span class="task-title ${isCompleted ? 'completed' : ''}">${task.name}</span>
+                ${badgeHtml}
+            </div>
+            <div class="task-actions">
+                ${actionButtonHtml} </div>
+        `;
+        
+        tasksListEl.appendChild(taskRow);
+    });
+};
