@@ -176,3 +176,24 @@ export const renderMilestonesList = () => {
         milestonesListEl.innerHTML = '<p class="empty-state">No milestones found. Add one!</p>';
         return;
     }
+     milestones.forEach(milestone => {
+        const milestoneCard = document.createElement('div');
+        milestoneCard.className = `milestone-card ${milestone.id === activeMilestone?.id ? 'active' : ''}`;
+        milestoneCard.dataset.milestoneId = milestone.id;
+
+        const tasks = getTasksForMilestone(milestone.id);
+        const totalTasks = tasks.length;
+        const completedTasks = tasks.filter(t => t.status === 'complete').length;
+
+        const progress = totalTasks > 0 ? Math.floor((completedTasks / totalTasks) * 100) : 0;
+        
+        milestoneCard.innerHTML = `
+            <div class="milestone-info">
+                <h3>${milestone.name}</h3>
+                <p>Tasks: ${completedTasks} / ${totalTasks}</p>
+            </div>
+            <div class="progress-ring">${progress}%</div>
+            <button class="edit-card-btn" data-modal-target="edit-milestone-modal" data-milestone-id="${milestone.id}">
+                <span class="icon">⚙️</span>
+            </button>
+        `;
