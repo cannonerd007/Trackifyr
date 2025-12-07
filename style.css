@@ -728,3 +728,136 @@ flex-shrink: 0;
 .panel-left h2 {
     margin-bottom: 0.75rem;
 }
+
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-5px); }
+    40%, 80% { transform: translateX(5px); }
+}
+
+
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+
+
+#task-locked-modal .modal-header div {
+    animation: pulse 1s infinite;
+}
+
+
+
+.task-checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    position: relative;
+    cursor: pointer;
+}
+.task-checkbox-input {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    border: 2px solid #cbd5e1;
+    border-radius: 6px;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    background: white;
+    transition: background 120ms ease, border-color 120ms ease;
+}
+.theme-dark .task-checkbox-input { background: #22252a; border-color: #374151; }
+.task-checkbox-input:checked {
+    background: linear-gradient(180deg, #2f80ed, #2b6be6);
+    border-color: rgba(0,0,0,0);
+}
+.task-checkbox-input:focus {
+    outline: 3px solid rgba(59,130,246,0.15);
+    outline-offset: 2px;
+    box-shadow: none;
+}
+
+
+.custom-tick {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.task-checkbox-input + .custom-tick::after {
+    content: '';
+    width: 10px;
+    height: 6px;
+    border-left: 3px solid transparent;
+    border-bottom: 3px solid transparent;
+    transform: rotate(-45deg) scale(0);
+    transition: transform 140ms ease;
+}
+.task-checkbox-input:checked + .custom-tick::after {
+    border-left: 3px solid #fff;
+    border-bottom: 3px solid #fff;
+    transform: rotate(-45deg) scale(1);
+}
+
+
+
+.task-checkbox-input[disabled] {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+
+
+.task-title.completed {
+    text-decoration: line-through;
+    color: #94a3b8;
+}
+
+
+
+.task-side-badge {
+    display: inline-block;
+    margin-left: 12px;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+.task-side-badge.completed {
+    background-color: var(--clr-unlocked);
+    color: white;
+}
+
+.task-side-badge.blocked {
+    background: #fff5f5;
+    color: #ef4444;
+    border: 1px solid rgba(239,68,68,0.12);
+}
+.task-side-badge.ready {
+    background: #f0fdf4;
+    color: #16a34a;
+    border: 1px solid rgba(16,185,129,0.08);
+}
