@@ -100,3 +100,19 @@ export const loadData = async (key) => {
         return null;
     }
 };
+
+/**
+ * @returns {Promise<string>} 
+ */
+export const loadTheme = async () => {
+    const theme = await loadData(STORAGE_KEYS.THEME);
+    return theme || 'light';
+};
+
+/**
+ * @param {string} theme 
+ * @returns {Promise<void>}
+ */
+export const saveTheme = async (theme) => {
+    await saveData(STORAGE_KEYS.THEME, theme);
+};
