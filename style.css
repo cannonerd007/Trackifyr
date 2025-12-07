@@ -1,0 +1,144 @@
+:root {
+--clr-bg: #e9ecef; 
+--clr-surface: #ffffff; 
+--clr-text: #212529; 
+--clr-text-muted: #6c757d; 
+--clr-primary: #007bff; 
+--clr-primary-hover: #0056b3;
+--clr-shadow: rgba(0, 0, 0, 0.05);
+--clr-glass-fill: rgba(255, 255, 255, 0.75); 
+--clr-border: #d3d9e0;
+--clr-locked: #dc3545; 
+--clr-unlocked: #28a745; 
+--clr-progress-fill: #17a2b8; 
+}
+
+
+.theme-dark {
+--clr-bg: #1a1e27; 
+--clr-surface: #2b303b; 
+--clr-text: #f0f0f0; 
+--clr-text-muted: #adb5bd;
+--clr-primary: #5da8ff; 
+--clr-primary-hover: #3c92e9;
+--clr-shadow: rgba(0, 0, 0, 0.3);
+--clr-glass-fill: rgba(43, 48, 59, 0.75); 
+--clr-border: #495057;
+--clr-locked: #ff6b6b;
+--clr-unlocked: #49e875;
+--clr-progress-fill: #5da8ff;
+}
+
+
+* {
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+}
+
+body {
+font-family: 'Inter', sans-serif;
+background-color: var(--clr-bg);
+color: var(--clr-text);
+transition: background-color 0.3s, color 0.3s;
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+margin:0;
+justify-content:center;
+align-items:center;
+padding:20px;
+}
+
+
+.app-container {
+    width:90%;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    max-width: 1400px; 
+    margin: 0;   
+    padding: 0 1.5rem;
+    border-radius:12px;
+    box-shadow:0 10px 30px var(--clr-shadow)
+}
+
+
+
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem; 
+    margin-top: 1.5rem; 
+    margin-bottom: 1.5rem; 
+    
+    background-color: var(--clr-surface);
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px var(--clr-shadow); 
+    
+    z-index: 100;
+}
+
+.logo-container { 
+    display: flex;
+    align-items: center;
+    gap: 0.75rem; 
+}
+
+.logo-container h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--clr-text); 
+}
+
+.app-logo {
+    height: 32px; 
+    width: 32px;
+}
+
+
+
+.project-progress-bar {
+    display: flex;
+    align-items: center;
+    flex-grow: 1; 
+    max-width: 400px; 
+    margin: 0 2rem; 
+    padding: 0.5rem 0; 
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.project-progress-bar .label {
+    font-size: 0.9rem;
+    color: var(--clr-text-muted);
+    font-weight: 500;
+    white-space: nowrap;
+    margin-right: 0.75rem;
+}
+
+.progress-track {
+    flex-grow: 1;
+    height: 8px; 
+    background-color: var(--clr-border);
+    border-radius: 4px;
+    overflow: hidden;
+    width: auto; 
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: var(--clr-primary);
+    transition: width 0.4s ease-out; 
+    border-radius: 4px;
+}
+
+.progress-value {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-left: 0.75rem;
+    color: var(--clr-primary);
+    min-width: 30px; 
+    text-align: right;
+}
