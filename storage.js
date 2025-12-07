@@ -60,3 +60,43 @@ export const saveData = async (key, data) => {
         console.error(`Error saving data for key ${key} to IndexedDB:`, error);
     }
 };
+
+/**
+ * @param {string} key 
+ * @returns {Promise<any>} 
+ */
+export const loadData = async (key) => {
+    try {
+        const db = await openDB();
+        const tx = db.transaction(STORE_NAME, 'readonly');
+        const store = tx.objectStore(STORE_NAME);
+        
+        const request = store.get(key);
+
+        return new Promise((resolve, reject) => {
+            request.onsuccess = (event) => {
+                const result = event.target.result;
+                let data = result ? result.value : null;
+                if (data === null) {
+                    if (key === STORAGE_KEYS.THEME) {
+                        data = 'light';
+                    } else if (key === STORAGE_KEYS.PROJECTS) {
+                        data = [];
+                    } else if (key === STORAGE_KEYS.ACTIVE_PROJECT_ID) {
+                        data = null;
+                    } else {
+                        data = null;
+                    }
+                }
+                resolve(data);
+            };
+            request.onerror = (event) => reject(event.target.error);
+        });
+    } catch (error) {
+        console.error(`Error loading data for key ${key} from IndexedDB:`, error);
+    
+        if (key === STORAGE_KEYS.THEME) return 'light';
+        if (key === STORAGE_KEYS.PROJECTS) return [];
+        return null;
+    }
+};
