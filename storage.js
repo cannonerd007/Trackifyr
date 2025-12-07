@@ -34,3 +34,29 @@ const openDB = () => {
         };
     });
 };
+
+/**
+ * @param {string} key 
+ * @param {any} data
+ * @returns {Promise<void>}
+ */
+export const saveData = async (key, data) => {
+    try {
+        const db = await openDB();
+        const tx = db.transaction(STORE_NAME, 'readwrite');
+        const store = tx.objectStore(STORE_NAME);
+        
+    
+        const request = store.put({ key: key, value: data });
+
+        await new Promise((resolve, reject) => {
+            request.onsuccess = () => resolve();
+            request.onerror = (event) => reject(event.target.error);
+        });
+
+
+        return tx.done;
+    } catch (error) {
+        console.error(`Error saving data for key ${key} to IndexedDB:`, error);
+    }
+};
